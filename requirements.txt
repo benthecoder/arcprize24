@@ -1,0 +1,6 @@
+matplotlib
+numpy
+openai
+python-dotenv
+tiktoken
+tqdm

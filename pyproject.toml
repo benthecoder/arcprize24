@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "arcprize"
+version = "0.1.0"
+description = "arc-agi solution"
+authors = ["benthecoder <benthecoder07@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+matplotlib = "^3.9.2"
+numpy = "^2.1.0"
+openai = "^1.42.0"
+python-dotenv = "^1.0.1"
+tiktoken = "^0.7.0"
+tqdm = "^4.66.5"
+jupyter = "^1.0.0"
+ipywidgets = "^8.1.5"
+scipy = "^1.14.1"
+asyncio = "^3.4.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
