@@ -1,5 +1,6 @@
 import argparse
 import asyncio
+import json
 import logging
 import os
 import random
@@ -21,7 +22,6 @@ from arcprize.config import (
 from arcprize.helpers import (
     create_submission_file,
     exec_response,
-    extract_reasoning_from_response,
     generate_user_prompt,
     load_data,
     plot_test_prediction,
@@ -63,7 +63,6 @@ async def fix_code_with_llm(broken_code, error_message, sample):
 
     respond with only the reasoning and the fixed code.
     """
-    logging.info("fixing code...")
 
     response = await client.chat.completions.create(
         model=MODEL,
@@ -75,8 +74,8 @@ async def fix_code_with_llm(broken_code, error_message, sample):
         top_p=TOP_P,
     )
     fixed_code = response.choices[0].message.content
-    reasoning = extract_reasoning_from_response(fixed_code)
-    logging.info(f"Reasoning: {reasoning}")
+    # reasoning = extract_reasoning_from_response(fixed_code)
+    # logging.info(f"Reasoning: {reasoning}")
     return fixed_code
 
 
@@ -120,8 +119,8 @@ async def get_task_prediction(
                 top_p=TOP_P,
             )
             resp = response.choices[0].message.content
-            reasoning = extract_reasoning_from_response(resp)
-            logging.info(f"Reasoning: {reasoning}")
+            # reasoning = extract_reasoning_from_response(resp)
+            # logging.info(f"Reasoning: {reasoning}")
 
             output, code, error = await handle_code_execution(resp, sample)
 
@@ -183,19 +182,28 @@ async def main(dataset, n_samples):
     else:
         sampled_items = list(data_samples.items())
 
+    semaphore = asyncio.Semaphore(10)
+
     async def process_task(task_id, sample):
-        logging.info(f"Predicting attempt for #{task_id}")
-        try:
-            output1 = await get_task_prediction(sample, user_prompt=USER_PROMPT_1)
-            output2 = await get_task_prediction(sample, user_prompt=USER_PROMPT_2)
-            results[task_id] = [{"attempt_1": output1, "attempt_2": output2}]
-        except Exception as e:
-            logging.error(f"Error for task {task_id}: {e}")
+        async with semaphore:
+            logging.info(f"Predicting attempt for #{task_id}")
+            try:
+                output1 = await get_task_prediction(sample, user_prompt=USER_PROMPT_1)
+                output2 = await get_task_prediction(sample, user_prompt=USER_PROMPT_2)
+
+                results[task_id] = [{"attempt_1": output1, "attempt_2": output2}]
+            except Exception as e:
+                logging.error(f"Error for task {task_id}: {e}")
 
     tasks = [process_task(task_id, sample) for task_id, sample in sampled_items]
     await asyncio.gather(*tasks)
 
     logging.info("saving results...\n")
+
+    if results is None:
+        logging.error("No results found.")
+        return
+
     plot_test_prediction(data_samples, solutions, results, dataset)
     create_submission_file(results, SUBMISSION_FILE_NAME)
 
@@ -204,6 +212,8 @@ async def main(dataset, n_samples):
         logging.info(
             f"Final score: {score_result['total_score']} of {score_result['total_tasks_scored']} ({round(score_result['total_score']/score_result['total_tasks_scored'] * 100, 2)}%)"
         )
+        with open("score.json", "w") as f:
+            json.dump(score_result, f)
 
 
 if __name__ == "__main__":

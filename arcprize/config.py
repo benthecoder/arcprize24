@@ -13,13 +13,11 @@ SUBMISSION_FILE_NAME = f"{PROJECT_PATH}/output/submission.json"
 TEMPERATURE = 0
 TOP_P = 0.1
 BASE_RESPONSE = [[0, 0], [0, 0]]
-RETRY_ATTEMPTS = 1
+RETRY_ATTEMPTS = 3
 
 SYSTEM_PROMPT = """You are an intelligent agent and a skilled Python programmer. Your task is to analyze and reason about complex pattern transformations where an input matrix (grid) is transformed into an output matrix based on a few examples. You need to identify the underlying transformation rule and implement it in Python.
 
-The inputs and outputs are represented as grids—a rectangular matrix of integers between 0 and 9 (inclusive). Each integer corresponds to a specific color. The correspondence between numbers and colors is as follows:
-
-0: Black, 1: Blue, 2: Green, 3: Red, 4: Yellow, 5: Magenta, 6: Cyan, 7: White, 8: Gray, 9: Orange.
+The inputs and outputs are represented as grids—a rectangular matrix of integers between 0 and 9 (inclusive). Each integer corresponds to a specific color. 
 
 You need to reason deductively to understand the transformation rule and demonstrate your reasoning in detail. Your response should include a clear and thorough reasoning section enclosed in <reasoning></reasoning> tags, followed by the implementation of the transformation in Python within triple backticks (```python```).
 """
@@ -1136,19 +1134,19 @@ def transform(grid_lst: list[list[int]]) -> list[list[int]]:
 
 USER_PROMPT_1 = f"""
 
-Here are two examples of a transformation pattern from `input` to `output` along with the reasoning behind the transformation:
+Here are some examples of a transformation pattern from `input` to `output` along with the reasoning behind the transformation:
 
-<SAMPLE_PROBLEM #1>
+<example_1>
 {example_1_reasoning}
-</SAMPLE_PROBLEM #1>
+</example_1>
 
-<SAMPLE_PROBLEM #2>
+<example_2>
 {example_2_reasoning}
-</SAMPLE_PROBLEM #2>
+</example_2>
 
-<SAMPLE_PROBLEM #3>
+<example_3>
 {example_3_reasoning}
-</SAMPLE_PROBLEM #3>
+</example_3>
 
 Now it's your turn to solve a new problem. Here's a new input: {{input_string}}
 
@@ -1172,19 +1170,19 @@ respond with the reasoning and the algorithm only
 
 USER_PROMPT_2 = f"""
 
-Here are two examples of a transformation pattern from `input` to `output` along with the reasoning behind the transformation:
+Here are some examples of a transformation pattern from `input` to `output` along with the reasoning behind the transformation:s
 
-<SAMPLE_PROBLEM #1>
+<example_1>
 {example_4_reasoning}
-</SAMPLE_PROBLEM #1>
+</example_1>
 
-<SAMPLE_PROBLEM #2>
+<example_2>
 {example_5_reasoning}
-</SAMPLE_PROBLEM #2>
+</example_2>
 
-<SAMPLE_PROBLEM #3>
+<example_3>
 {example_6_reasoning}
-</SAMPLE_PROBLEM #3>
+</example_3>
 
 Now it's your turn to solve a new problem. Here's a new input: {{input_string}}
 
