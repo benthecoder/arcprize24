@@ -290,7 +290,7 @@ def plot_one(task, ax, i, train_or_test, input_or_output):
     ax.set_title(train_or_test + " " + input_or_output, fontweight="bold")
 
 
-def plot_test_prediction(data_samples, solutions, results, dataset):
+def plot_prediction(data_samples, solutions, results, dataset):
     """Plots the test input, expected output, and predicted output."""
     for sample_key, result in results.items():
         if sample_key not in data_samples:
