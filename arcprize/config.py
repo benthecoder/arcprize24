@@ -3,7 +3,7 @@ DATA_PATHS_MAP = {
     "train": f"{PROJECT_PATH}/data/arc-agi_training_challenges.json",
     "train_solutions": f"{PROJECT_PATH}/data/arc-agi_training_solutions.json",
     "eval": f"{PROJECT_PATH}/data/arc-agi_evaluation_challenges.json",
-    "eval_soultions": f"{PROJECT_PATH}/data/arc-agi_evaluation_solutions.json",
+    "eval_solutions": f"{PROJECT_PATH}/data/arc-agi_evaluation_solutions.json",
     "test": f"{PROJECT_PATH}/data/arc-agi_test_challenges.json",
     "sample_sub": f"{PROJECT_PATH}/data/sample_submission.json",
 }
