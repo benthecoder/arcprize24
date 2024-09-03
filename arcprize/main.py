@@ -22,13 +22,18 @@ from arcprize.config import (
 from arcprize.helpers import (
     create_submission_file,
     exec_response,
+    extract_reasoning_from_response,
     generate_user_prompt,
     load_data,
-    plot_test_prediction,
+    plot_prediction,
     score_submission,
 )
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[logging.FileHandler("arcprize.log"), logging.StreamHandler()],
+)
 
 load_dotenv()
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
@@ -74,8 +79,8 @@ async def fix_code_with_llm(broken_code, error_message, sample):
         top_p=TOP_P,
     )
     fixed_code = response.choices[0].message.content
-    # reasoning = extract_reasoning_from_response(fixed_code)
-    # logging.info(f"Reasoning: {reasoning}")
+    reasoning = extract_reasoning_from_response(fixed_code)
+    logging.info(f"Reasoning: {reasoning}")
     return fixed_code
 
 
@@ -119,8 +124,8 @@ async def get_task_prediction(
                 top_p=TOP_P,
             )
             resp = response.choices[0].message.content
-            # reasoning = extract_reasoning_from_response(resp)
-            # logging.info(f"Reasoning: {reasoning}")
+            reasoning = extract_reasoning_from_response(resp)
+            logging.info(f"Reasoning: {reasoning}")
 
             output, code, error = await handle_code_execution(resp, sample)
 
@@ -204,7 +209,7 @@ async def main(dataset, n_samples):
         logging.error("No results found.")
         return
 
-    plot_test_prediction(data_samples, solutions, results, dataset)
+    plot_prediction(data_samples, solutions, results, dataset)
     create_submission_file(results, SUBMISSION_FILE_NAME)
 
     if solutions:
