@@ -4,6 +4,18 @@ code for [ARC Prize 2024](https://www.kaggle.com/competitions/arc-prize-2024/cod
 
 [leaderboard](https://arcprize.org/leaderboard) for ARC prize
 
+## results
+
+| Dataset | Score         | Time Taken | cost |
+| ------- | ------------- | ---------- | ---- |
+| Train   | (38/400) 9.5% | 75m        | $200 |
+
+## improvements
+
+- output dimensions not matching
+- import errors ('bfs') and missing variables in code
+- prefix caching
+
 ## run
 
 1. **Clone the repository:**
